@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Digital Ticket</title>
+
+<style>
+body {
+font-family: Arial, sans-serif;
+padding: 40px;
+background-color: #003153; 
+text-align: center;
+color: white; 
+}
+.slot-container {
+display: flex;
+justify-content: center;   
+align-items: flex-start;   
+gap: 40px;                 
+margin-top: 30px;
+}
+.slot-box, .qr-box {
+text-align: left;
+border: 2px solid white;  
+padding: 20px;
+border-radius: 10px;
+background-color: transparent;
+box-shadow: 0 4px 10px rgba(255,255,255,0.2); 
+min-width: 220px;
+}
+.slot-box p {
+font-size: 18px;
+margin: 10px 0;
+color: white;
+min-height: 35px;
+}
+h1 {
+margin-bottom: 30px;
+color: white;
+}
+h2 {
+margin-top: 0;
+margin-bottom: 15px;
+font-size: 20px;
+text-align: center;
+border-bottom: 1px solid rgba(255,255,255,0.3);
+padding-bottom: 5px;
+}
+.qr-box {
+display: flex;
+flex-direction: column;    
+justify-content: flex-start;
+align-items: center;
+min-height: 220px;         
+}
+</style>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+
+<!-- Heading -->
+<h1>Your Digital Ticket</h1>
+
+<!-- Booking Information -->
+<div class="slot-container">
+<div class="slot-box">
+<h2>Booking Details</h2>
+<p><strong>Slot ID:</strong> <span id="slotId"></span></p>
+<p><strong>Ticket ID:</strong> <span id="ticketId"></span></p>
+<p><strong>Type:</strong> <span id="type"></span></p>
+<p><strong>Block:</strong> <span id="block"></span></p>
+</div>
+
+<!-- Exit Verification Code -->
+<div class="qr-box">
+<h2>Exit Code</h2>
+<canvas id="qrcode"></canvas>
+</div>
+</div>
+<script>
+
+// Get URL parameters
+const params = new URLSearchParams(window.location.search);
+const ticketData = {
+ticketId: params.get('ticketId'),
+slotId: params.get('slotId'),
+};
+
+// Display booking details
+document.getElementById('slotId').textContent = ticketData.slotId || '';
+document.getElementById('ticketId').textContent = ticketData.ticketId || '';
+document.getElementById('type').textContent = params.get('type') || '';
+document.getElementById('block').textContent = params.get('block') || '';
+
+// Generate QR code into the canvas
+const canvas = document.getElementById('qrcode');
+QRCode.toCanvas(
+canvas,
+JSON.stringify(ticketData),
+{ width: 180 },
+function (error) {
+  if (error) {
+console.error('QR Code generation failed:', error);
+  } else {
+console.log('QR Code generated successfully');
+  }
+  }
+);
+
+</script>
+</body>
+</html>
